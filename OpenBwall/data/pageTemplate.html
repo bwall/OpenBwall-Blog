@@ -1,9 +1,9 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-        <title>%(title)</title>
-        <META NAME="Description" CONTENT="%(description)">
-        <META NAME="Keywords" CONTENT="%(keywords)">
+        <title>%(title)s</title>
+        <META NAME="Description" CONTENT="%(description)s">
+        <META NAME="Keywords" CONTENT="%(keywords)s">
         <link href="/css/style.css" rel="stylesheet" type="text/css" media="all"/>
         <script type="text/javascript">
             function ajaxQueryBuckey()
@@ -52,13 +52,13 @@
         <div id="content">
             <div id="sidebar">
                 <center><h3>All Posts</h3></center>
-                %(sidebar)
+                %(sidebar)s
                 <h3>Talk with Buckey</h3>
                 <input type="text" id="markovInput" value="Talk to my AI here" onkeypress="buckeyHandleKeyPress(event)" />
                 <button type="button" onclick="ajaxQueryBuckey()">Request response</button>
                 <div id="markovOutput"></div>
             </div>
-            %(content)
+            %(content)s
         </div>
     </body>
 </html>

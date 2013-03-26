@@ -1,7 +1,7 @@
 {
 	"title" : "OpenBwall: Read Access to bwall's Thoughts",
-	"description" : "",
-	"keywords" : "",
+	"description" : "Brian Wallace's(bwall/bwallHatesTwits) blog.",
+	"keywords" : "Brian Wallace, bwall, bwallHatesTwits, OpenBwall",
 	"order" : ["Optimizing-Bitcoin-Miner-Idea", "Open-Source-Recruiting", "Interpreting-Cyber-Espionage", "AI-API-Project-Idea", "When-Are-Open-Source-Projects-Done", "About-OpenBwall"],
 	"posts" : {
 		"Optimizing-Bitcoin-Miner-Idea" : {

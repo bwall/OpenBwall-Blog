@@ -25,7 +25,15 @@
     <Compile Include="OpenBwall.py" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="posts.json" />
+    <Content Include="data\css\style.css" />
+    <Content Include="data\posts.json" />
+    <Content Include="data\pageTemplate.html" />
+    <Content Include="data\postTemplate.html" />
+    <Content Include="data\sideTemplate.html" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="data\" />
+    <Folder Include="data\css\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.Common.targets" />
 </Project>
