@@ -1,0 +1,121 @@
+body {
+    background: white; 
+    color: black; 
+    margin:0px;
+}
+
+body, input, textarea {
+     font-family: Georgia, serif; 
+     font-size: 12pt;
+}
+        
+table {
+     border-collapse: collapse; 
+     border: 0;
+} 
+
+td {
+     border: 0; 
+     padding: 0;
+} 
+
+h1 {
+    display:block; 
+    background-color: #f3f3f3; 
+    padding:10px; 
+    margin:0 0 10px 0; 
+    color: #4183c4; 
+    text-decoration: none;
+}
+    
+h1, h2, h3, h4 {
+     font-family: "Helvetica Nue", Helvetica, Arial, sans-serif;
+} 
+
+h1 {
+     font-size: 20pt;
+} 
+
+pre, code {
+     font-family: monospace; color: #060;
+}
+
+pre {
+     margin-left: 1em;  
+     padding-left: 1em; 
+     border-left: 1px solid silver; 
+     line-height: 14pt;
+} 
+
+a, a code {
+     color: #00c;
+} 
+
+#header {
+     margin-bottom:10px;
+}
+
+#header, #header a {
+     color: #4183c4;
+} 
+
+#header h1 a {
+     text-decoration: none;
+} 
+
+#footer {
+     margin-left: 10px; 
+     margin-right: 10px;
+} 
+
+#footer {
+     margin-top: 3em;
+}
+
+#content {
+    width:100%; 
+    margin:0 auto;
+} 
+
+.post {
+    width:75%; 
+    margin:20px; 
+    margin:5px 5px 20px 5px; 
+    border: dotted #000 1px; 
+    padding:0px;
+} 
+
+.post h2 {
+    margin-top:0px;
+}
+
+.post h2 a {
+     display:block; 
+     background-color: #f3f3f3; 
+     padding:10px; 
+     margin:0 0 10px 0;  
+     color: #4183c4; 
+     text-decoration: none;
+} 
+
+#sidebar {
+    padding:0px;
+    float:right;
+    width:24%;
+    border: dotted #000 1px;
+    display:table;
+}
+
+.entry .date {
+     margin-top: 3px;
+} 
+
+.entry p {
+     margin: 0; 
+     margin-bottom: 1em;
+} 
+
+.entry .body {
+     margin-top: 1em; 
+     line-height: 16pt;
+}

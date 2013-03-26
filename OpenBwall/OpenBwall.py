@@ -6,6 +6,7 @@ import tornado.web
 import json
 import threading
 import time
+import httplib
 
 from threading import Lock
 from tornado.options import define, options
@@ -14,97 +15,52 @@ define("port", default=8888, help="run on the given port", type=int)
 
 posts = {}
 lock = Lock()
+lastupdate = False
+
+cssFile = False
+pageTemplate = False
+sideTemplate = False
+postTemplate = False
 
 class CSSHandler(tornado.web.RequestHandler):
     def get(self, id):
-        cssFile = "body {background: white; color: black; margin:0px;}\body, input, textarea { font-family: Georgia, serif; font-size: 12pt; }\
-        table { border-collapse: collapse; border: 0;} td { border: 0; padding: 0;} h1 {display:block; background-color: #f3f3f3; padding:10px; margin:0 0 10px 0;  color: #4183c4; text-decoration: none;}\
-        h1, h2, h3, h4 { font-family: \"Helvetica Nue\", Helvetica, Arial, sans-serif; } h1 { font-size: 20pt;} pre, code { font-family: monospace; color: #060;} \
-        pre { margin-left: 1em;  padding-left: 1em; border-left: 1px solid silver; line-height: 14pt;} a, a code { color: #00c;} #header { margin-bottom:10px; } \
-        #header, #header a { color: #4183c4;} #header h1 a { text-decoration: none; } #footer { margin-left: 10px; margin-right: 10px;} #footer { margin-top: 3em;}\
-        #content {width:100%; margin:0 auto;} .post {width:75%; margin:20px; margin:5px 5px 20px 5px; border: dotted #000 1px; padding:0px;} .post h2 {margin-top:0px;}\
-        .post h2 a { display:block; background-color: #f3f3f3; padding:10px; margin:0 0 10px 0;  color: #4183c4; text-decoration: none;} #sidebar {padding:0px;float:right;width:24%;border: dotted #000 1px;display:table;}\
-        .entry .date { margin-top: 3px;} .entry p { margin: 0; margin-bottom: 1em;} .entry .body { margin-top: 1em; line-height: 16pt;}"
+        global lock, cssFile
+        lock.acquire()
         self.write(cssFile)
+        lock.release()
 
-def GenerateHead(title):
-    return "<html>\r\n<head>\r\n<title>" + title + "</title>\r\n<link href=\"/css/onlylamerslookatthis.css\" rel=\"stylesheet\" type=\"text/css\" media=\"all\"/>\r\n \
-                    </head>\r\n<body>\r\n<div id=\"header\"><div style=\"float:right\"><a href=\"https://twitter.com/bwallHatesTwits\" title=\"@bwallHatesTwits on Twitter\">Have fun stalking me on Twitter</a></div>\r\n<h1>\
-                    <a href=\"/\">OpenBwall: Read Access to bwall's Thoughts</a></h1></div>\r\n<div id=\"content\">"
-
-def GenerateMarkovDiv():
-    return "<script type=\"text/javascript\">\r\n\
-function loadXMLDoc()\r\n\
-{\r\n\
-var xmlhttp;\r\n\
-if (window.XMLHttpRequest)\r\n\
-  {\r\n\
-  xmlhttp=new XMLHttpRequest();\r\n\
-  }\r\n\
-else\r\n\
-  {\r\n\
-  xmlhttp=new ActiveXObject(\"Microsoft.XMLHTTP\");\r\n\
-  }\r\n\
-xmlhttp.onreadystatechange=function()\r\n\
-  {\r\n\
-  if (xmlhttp.readyState==4 && xmlhttp.status==200)\r\n\
-    {\r\n\
-    document.getElementById(\"markovOutput\").innerHTML=\"<b>Buckey:</b> \" + xmlhttp.responseText;\r\n\
-    document.getElementById(\"markovInput\").value = \"\";\r\n\
-    }\r\n\
-  }\r\n\
-xmlhttp.open(\"POST\",\"/api/markov/query\",true);\r\n\
-xmlhttp.setRequestHeader(\"Content-type\",\"application/x-www-form-urlencoded\");\r\n\
-xmlhttp.send(\"input=\" + encodeURIComponent(document.getElementById(\"markovInput\").value));\r\n\
-document.getElementById(\"markovInput\").value = \"Response coming...\";\r\n\
-}\r\n\
-function handleKeyPress(e,form){\r\n\
-var key=e.keyCode || e.which;\r\n\
-if (key==13){\r\n\
-loadXMLDoc();\r\n\
-}\r\n\
-}\r\n\
-</script>\r\n\
-<h3>Talk with Buckey</h3>\r\n\
-<input type=\"text\" id=\"markovInput\" value=\"Talk to my AI here\" onkeypress=\"handleKeyPress(event,this.form)\" />\r\n\
-<button type=\"button\" onclick=\"loadXMLDoc()\">Request response</button>\r\n\
-<div id=\"markovOutput\"></div>\r\n"
-
-def GenerateSideBar():
-    global lock, posts
-    sidebar = "<div id=\"sidebar\"><center><h3>All Posts</h3></center>"
-    
+def GeneratePage(title, content, description, keywords):
+    global lock, pageTemplate, sideTemplate, posts
     lock.acquire()
+    sidebar = ""
     for urlname in posts["order"]:
         entry = posts["posts"][urlname]
-        sidebar += "<a href=\"/entry/" + urlname + "\" title=\"" + entry["title"] + "\">" + "[" + entry["date"] + "] " + entry["title"] + "</a>" + "<br>"
+        sidebar += sideTemplate % {"urlname" : urlname, "title" : entry["title"], "date" : entry["date"]}
+    toReturn = pageTemplate % {"title" : title, "sidebar": sidebar, "content" : content, "description" : description, "keywords" : keywords}
     lock.release()
-
-    sidebar += GenerateMarkovDiv()
-
-    sidebar += "</div>"
-    return sidebar
+    return toReturn
 
 class HomeHandler(tornado.web.RequestHandler):
     def get(self):
-        global lock, posts
-        homePage = GenerateHead("OpenBwall: Read Access to bwall's Thoughts") + GenerateSideBar()
+        global lock, posts, postTemplate
+        updatePosts()
 
         lock.acquire()
-        
+        title = posts["title"]
+        content = ""
         for urlname in posts["order"]:
             entry = posts["posts"][urlname]
-            homePage += "<div class=\"post\"><h2><a href=\"/entry/" + urlname + "\">" + entry["title"] + "</a></h2><div class=\"entry\"><div class=\"date\">" + entry["date"] + "</div>"
-            homePage += "<div class=\"body\">" + entry["body"] + "</div></div></div>"
+            content += postTemplate % {"urlname" : urlname, "title" : entry["title"], "date" : entry["date"], "body" : entry["body"]}
         
+        description = posts["description"]
+        keywords = posts["keywords"]
         lock.release()
-        
-        homePage += "</div></body></html>"
-        self.write(homePage)
+
+        self.write(GeneratePage(title, content, description, keywords))
 
 class EntryHandler(tornado.web.RequestHandler):
     def get(self, urlname):
-        global lock, posts
+        global lock, posts, postTemplate
         entry = False
         lock.acquire()
         if urlname in posts["posts"]:
@@ -113,12 +69,13 @@ class EntryHandler(tornado.web.RequestHandler):
         if entry == False:
             raise tornado.web.HTTPError(404)
 
-        homePage = GenerateHead("OpenBwall: " + entry["title"]) + GenerateSideBar()
-        homePage += "<div class=\"post\"><h2><a href=\"/entry/" + urlname + "\">" + entry["title"] + "</a></h2><div class=\"entry\"><div class=\"date\">" + entry["date"] + "</div>"
-        homePage += "<div class=\"body\">" + entry["body"] + "</div></div></div>"
-        #tail end
-        homePage += "</div></body></html>"
-        self.write(homePage)
+        lock.acquire()
+        content = postTemplate % {"urlname" : urlname, "title" : entry["title"], "date" : entry["date"], "body" : entry["body"]}
+        description = entry["description"]
+        keywords = entry["keywords"]
+        lock.release()
+
+        self.write(GeneratePage("OpenBwall: " + entry["title"], content, description, keywords))
 
 application = tornado.web.Application([
                                        (r"/", HomeHandler),
@@ -132,23 +89,46 @@ def main():
     http_server.listen(options.port)
     tornado.ioloop.IOLoop.instance().start()
 
-def writePosts():
-    global lock, posts
+def updatePosts():
+    global lock, posts, lastupdate, cssFile, pageTemplate, sideTemplate, postTemplate
     lock.acquire()
-    f = open('posts.json', 'r')
-    posts = json.loads(f.read())
-    f.close()    
+    if lastupdate == False or (time.mktime(time.gmtime()) - time.mktime(lastupdate)) > 60:
+        conn = httplib.HTTPSConnection("raw.github.com")
+        conn.request("GET", "/bwall/OpenBwall-Blog/master/OpenBwall/data/posts.json")
+        r1 = conn.getresponse()
+        if r1.status == 200:
+            posts = json.loads(r1.read())
+        conn.close()
+
+        conn = httplib.HTTPSConnection("raw.github.com")
+        conn.request("GET", "/bwall/OpenBwall-Blog/master/OpenBwall/data/css/style.css")
+        r1 = conn.getresponse()
+        if r1.status == 200:
+            cssFile = r1.read()
+        conn.close() 
+
+        conn = httplib.HTTPSConnection("raw.github.com")
+        conn.request("GET", "/bwall/OpenBwall-Blog/master/OpenBwall/data/pageTemplate.html")
+        r1 = conn.getresponse()
+        if r1.status == 200:
+            pageTemplate = r1.read()
+        conn.close() 
+
+        conn = httplib.HTTPSConnection("raw.github.com")
+        conn.request("GET", "/bwall/OpenBwall-Blog/master/OpenBwall/data/sideTemplate.html")
+        r1 = conn.getresponse()
+        if r1.status == 200:
+            sideTemplate = r1.read()
+        conn.close() 
+
+        conn = httplib.HTTPSConnection("raw.github.com")
+        conn.request("GET", "/bwall/OpenBwall-Blog/master/OpenBwall/data/postTemplate.html")
+        r1 = conn.getresponse()
+        if r1.status == 200:
+            postTemplate = r1.read()
+        conn.close() 
     lock.release()
-    
-class UpdateThread(threading.Thread):
-    def run(self):
-        while True:
-            writePosts()
-            time.sleep(5)
-            
 
 if __name__ == "__main__":
-    writePosts()
-    t = UpdateThread()
-    t.start()
+    updatePosts()
     main()
