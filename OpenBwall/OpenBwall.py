@@ -92,7 +92,7 @@ def main():
 def updatePosts():
     global lock, posts, lastupdate, cssFile, pageTemplate, sideTemplate, postTemplate
     lock.acquire()
-    if lastupdate == False or (time.mktime(time.gmtime()) - time.mktime(lastupdate)) > 60:
+    if lastupdate == False or (time.mktime(time.gmtime()) - time.mktime(lastupdate)) > 300:
         conn = httplib.HTTPSConnection("raw.github.com")
         conn.request("GET", "/bwall/OpenBwall-Blog/master/OpenBwall/data/posts.json")
         r1 = conn.getresponse()
