@@ -33,11 +33,15 @@ class CSSHandler(tornado.web.RequestHandler):
 def GeneratePage(title, content, description, keywords):
     global lock, pageTemplate, sideTemplate, posts
     lock.acquire()
-    sidebar = ""
-    for urlname in posts["order"]:
-        entry = posts["posts"][urlname]
-        sidebar += sideTemplate % {"urlname" : urlname, "title" : entry["title"], "date" : entry["date"]}
-    toReturn = pageTemplate % {"title" : title, "sidebar": sidebar, "content" : content, "description" : description, "keywords" : keywords}
+    toReturn = ""
+    try:
+        sidebar = ""
+        for urlname in posts["order"]:
+            entry = posts["posts"][urlname]
+            sidebar += sideTemplate % {"urlname" : urlname, "title" : entry["title"], "date" : entry["date"]}
+        toReturn = pageTemplate % {"title" : title, "sidebar": sidebar, "content" : content, "description" : description, "keywords" : keywords}
+    except:
+        toReturn = "error"
     lock.release()
     return toReturn
 
@@ -100,40 +104,43 @@ def updatePosts():
     global lock, posts, lastupdate, cssFile, pageTemplate, sideTemplate, postTemplate
     lock.acquire()
     if lastupdate == False or (time.mktime(time.gmtime()) - time.mktime(lastupdate)) > 300:
-        conn = httplib.HTTPSConnection("raw.github.com")
-        conn.request("GET", "/bwall/OpenBwall-Blog/master/OpenBwall/data/posts.json")
-        r1 = conn.getresponse()
-        if r1.status == 200:
-            posts = json.loads(r1.read())
-        conn.close()
+        try:
+            conn = httplib.HTTPSConnection("raw.github.com")
+            conn.request("GET", "/bwall/OpenBwall-Blog/master/OpenBwall/data/posts.json")
+            r1 = conn.getresponse()
+            if r1.status == 200:
+                posts = json.loads(r1.read())
+            conn.close()
 
-        conn = httplib.HTTPSConnection("raw.github.com")
-        conn.request("GET", "/bwall/OpenBwall-Blog/master/OpenBwall/data/css/style.css")
-        r1 = conn.getresponse()
-        if r1.status == 200:
-            cssFile = r1.read()
-        conn.close() 
+            conn = httplib.HTTPSConnection("raw.github.com")
+            conn.request("GET", "/bwall/OpenBwall-Blog/master/OpenBwall/data/css/style.css")
+            r1 = conn.getresponse()
+            if r1.status == 200:
+                cssFile = r1.read()
+            conn.close() 
 
-        conn = httplib.HTTPSConnection("raw.github.com")
-        conn.request("GET", "/bwall/OpenBwall-Blog/master/OpenBwall/data/pageTemplate.html")
-        r1 = conn.getresponse()
-        if r1.status == 200:
-            pageTemplate = r1.read()
-        conn.close() 
+            conn = httplib.HTTPSConnection("raw.github.com")
+            conn.request("GET", "/bwall/OpenBwall-Blog/master/OpenBwall/data/pageTemplate.html")
+            r1 = conn.getresponse()
+            if r1.status == 200:
+                pageTemplate = r1.read()
+            conn.close() 
 
-        conn = httplib.HTTPSConnection("raw.github.com")
-        conn.request("GET", "/bwall/OpenBwall-Blog/master/OpenBwall/data/sideTemplate.html")
-        r1 = conn.getresponse()
-        if r1.status == 200:
-            sideTemplate = r1.read()
-        conn.close() 
+            conn = httplib.HTTPSConnection("raw.github.com")
+            conn.request("GET", "/bwall/OpenBwall-Blog/master/OpenBwall/data/sideTemplate.html")
+            r1 = conn.getresponse()
+            if r1.status == 200:
+                sideTemplate = r1.read()
+            conn.close() 
 
-        conn = httplib.HTTPSConnection("raw.github.com")
-        conn.request("GET", "/bwall/OpenBwall-Blog/master/OpenBwall/data/postTemplate.html")
-        r1 = conn.getresponse()
-        if r1.status == 200:
-            postTemplate = r1.read()
-        conn.close() 
+            conn = httplib.HTTPSConnection("raw.github.com")
+            conn.request("GET", "/bwall/OpenBwall-Blog/master/OpenBwall/data/postTemplate.html")
+            r1 = conn.getresponse()
+            if r1.status == 200:
+                postTemplate = r1.read()
+            conn.close()
+        except:
+            print "Failed to update" 
     lock.release()
 
 if __name__ == "__main__":
