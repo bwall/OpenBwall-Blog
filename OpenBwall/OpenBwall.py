@@ -7,6 +7,7 @@ import json
 import threading
 import time
 import httplib
+import hashlib
 
 from threading import Lock
 from tornado.options import define, options
@@ -43,7 +44,6 @@ def GeneratePage(title, content, description, keywords):
 class HomeHandler(tornado.web.RequestHandler):
     def get(self):
         global lock, posts, postTemplate
-        updatePosts()
 
         lock.acquire()
         title = posts["title"]
@@ -77,10 +77,17 @@ class EntryHandler(tornado.web.RequestHandler):
 
         self.write(GeneratePage("OpenBwall: " + entry["title"], content, description, keywords))
 
+class RefreshHandler(tornado.web.RequestHandler):
+    def get(self, refreshAuth):
+        if hashlib.sha256(refreshAuth).hexdigest() == "f84dde2069f8011d6eedc8759e3f9ec4cfe9b24d92eb6c37a25da42de23c64cb":
+            updatePosts()
+            self.write("Updated")
+
 application = tornado.web.Application([
                                        (r"/", HomeHandler),
                                        (r"/css/(.*)", CSSHandler),
                                        (r"/entry/(.+)", EntryHandler),
+                                       (r"/refresh/(.*)", RefreshHandler),
                                        ])
 
 def main():
