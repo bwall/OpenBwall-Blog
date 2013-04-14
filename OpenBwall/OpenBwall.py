@@ -13,6 +13,7 @@ from threading import Lock
 from tornado.options import define, options
 
 define("port", default=8888, help="run on the given port", type=int)
+define("debug", default=False, type=bool)
 
 posts = {}
 lock = Lock()
@@ -31,16 +32,21 @@ class CSSHandler(tornado.web.RequestHandler):
         self.write(cssFile)
         lock.release()
 
-def GeneratePage(title, content, description, keywords):
+def GeneratePage(title, content, description, keywords, includeSideBar = True):
     global lock, pageTemplate, sideTemplate, posts
     lock.acquire()
     toReturn = ""
-    try:
-        sidebar = ""
-        for urlname in posts["order"]:
-            entry = posts["posts"][urlname]
-            sidebar += sideTemplate % {"urlname" : urlname, "title" : entry["title"], "date" : entry["date"]}
-        toReturn = pageTemplate % {"title" : title, "sidebar": sidebar, "content" : content, "description" : description, "keywords" : keywords}
+    try:        
+        if includeSideBar:
+            sidebar = "<div id='container'><h1><a rel='bookmark' href='/'>Blog &laquo; Bringing Balance Back to Security</a></h1>		<div id='content'><div id='sidebar'><div class='sidebar-widget'><h3>Recent Posts</h3><ul>"
+            for urlname in posts["order"]:
+                entry = posts["posts"][urlname]
+                sidebar += sideTemplate % {"urlname" : urlname, "title" : entry["title"], "date" : entry["date"]}
+            sidebar += "</ul></div></div>"
+            content = sidebar + content + "</div>"
+            toReturn = pageTemplate % {"title" : title, "content" : content, "description" : description, "keywords" : keywords}
+        else:
+            toReturn = pageTemplate % {"title" : title, "content" : content, "description" : description, "keywords" : keywords}
     except:
         toReturn = "error"
     lock.release()
@@ -55,10 +61,9 @@ class HomeHandler(tornado.web.RequestHandler):
         content = homePage      
         description = posts["description"]
         keywords = posts["keywords"]
-        page = content % {"title" : title, "description" : description, "keywords" : keywords}
         lock.release()
 
-        self.write()
+        self.write(GeneratePage(title, content, description, keywords, False))
 
 class BlogHandler(tornado.web.RequestHandler):
     def get(self):
@@ -69,7 +74,7 @@ class BlogHandler(tornado.web.RequestHandler):
         content = ""
         for urlname in posts["order"]:
             entry = posts["posts"][urlname]
-            content += postTemplate % {"urlname" : urlname, "title" : entry["title"], "date" : entry["date"], "body" : entry["body"]}
+            content += postTemplate % {"urlname" : urlname, "title" : entry["title"], "date" : entry["date"], "body" : entry["description"]}
         
         description = posts["description"]
         keywords = posts["keywords"]
@@ -113,6 +118,26 @@ class EntryHandler(tornado.web.RequestHandler):
 
         self.write(GeneratePage("OpenBwall: " + entry["title"], content, description, keywords))
 
+
+class PageHandler(tornado.web.RequestHandler):
+    def get(self, urlname):
+        global lock, posts, postTemplate
+        entry = False
+        lock.acquire()
+        if urlname in posts["pages"]:
+            entry = posts["pages"][urlname]
+        lock.release()
+        if entry == False:
+            raise tornado.web.HTTPError(404)
+
+        lock.acquire()
+        content = postTemplate % {"urlname" : urlname, "title" : entry["title"], "date" : "", "body" : entry["body"]}
+        description = entry["description"]
+        keywords = entry["keywords"]
+        lock.release()
+
+        self.write(GeneratePage("OpenBwall: " + entry["title"], content, description, keywords))
+
 class RefreshHandler(tornado.web.RequestHandler):
     def get(self, refreshAuth):
         if hashlib.sha256(refreshAuth).hexdigest() == "f84dde2069f8011d6eedc8759e3f9ec4cfe9b24d92eb6c37a25da42de23c64cb":
@@ -121,6 +146,7 @@ class RefreshHandler(tornado.web.RequestHandler):
 
 application = tornado.web.Application([
                                        (r"/", HomeHandler),
+                                       (r"/page/(.+)", PageHandler),
                                        (r"/css/(.*)", CSSHandler),
                                        (r"/blog/?", BlogHandler),
                                        (r"/blog/([0-9]+)", BlogListHandler),
@@ -185,5 +211,30 @@ def updatePosts():
     lock.release()
 
 if __name__ == "__main__":
-    updatePosts()
+    if options.debug:
+        f = open("data/posts.json", 'r')
+        posts = json.loads(f.read())
+        f.close()
+
+        f = open("data/css/style.css", 'r')
+        cssFile = f.read()
+        f.close()
+
+        f = open("data/pageTemplate.html", 'r')
+        pageTemplate = f.read()
+        f.close()
+
+        f = open("data/sideTemplate.html", 'r')
+        sideTemplate = f.read()
+        f.close()
+
+        f = open("data/postTemplate.html", 'r')
+        postTemplate = f.read()
+        f.close()
+
+        f = open("data/homePage.html", 'r')
+        homePage = f.read()
+        f.close()
+    else:
+        updatePosts()
     main()

@@ -1,121 +1,512 @@
+/*
+Theme Name: Ballast Security V1
+Theme URI: http://www.ticktockcomputers.com/
+Description: Designed by <a href="http://www.ticktockcomputers.com/">DigiP</a>.
+Version: 1.0
+Author: <a href="http://www.ticktockcomputers.com/">Tick Tock Computers LLC</a>
+Author URI: http://www.ticktockcomputers.com/
+*/
+
 body {
-    background: white; 
-    color: black; 
-    margin:0px;
+margin:0px;
+font-family:arial,sans-serif;
+font-size:15px;
+color:#000;
+background-image: url(https://www.ballastsecurity.net/wp-content/themes/Ballast-Security/back.png);
+background-repeat:repeat-x;
+background-position:0 20px;
+background-color:#fff;
 }
 
-body, input, textarea {
-     font-family: Georgia, serif; 
-     font-size: 12pt;
+/*
+#body-container {
+background-image: url(body-container.png);
+background-size:100%;
+background-repeat:no-repeat;
+background-attachment:fixed;
 }
-        
-table {
-     border-collapse: collapse; 
-     border: 0;
-} 
+*/
 
-td {
-     border: 0; 
-     padding: 0;
-} 
+a img {
+border:none;
+}
+
+a {
+color:#166dc6;
+text-decoration:none;
+-webkit-transition: 0.5s ease-out;
+-moz-transition:0.5s ease-out;
+-o-transition:0.5s ease-out;
+transition: 0.5s ease-out;
+}
+
+a:hover {
+color:#2f5a8a;
+text-decoration:underline;
+-webkit-transition: 0.5s ease-in;
+-moz-transition:0.5s ease-in;
+-o-transition:0.5s ease-in;
+transition: 0.5s ease-in;
+}
 
 h1 {
-    display:block; 
-    background-color: #f3f3f3; 
-    padding:10px; 
-    margin:0 0 10px 0; 
-    color: #4183c4; 
-    text-decoration: none;
-}
-    
-h1, h2, h3, h4 {
-     font-family: "Helvetica Nue", Helvetica, Arial, sans-serif;
-} 
-
-h1 {
-     font-size: 20pt;
-} 
-
-pre, code {
-     font-family: monospace; color: #060;
+font-weight:normal;
+font-size:20px;
 }
 
-pre {
-     margin-left: 1em;  
-     padding-left: 1em; 
-     border-left: 1px solid silver; 
-     line-height: 14pt;
-} 
-
-a, a code {
-     color: #00c;
-} 
+h1 a{
+color:#000;
+}
 
 #header {
-     margin-bottom:10px;
+width:980px;
+height:73px;
+margin:0 auto;
 }
 
-#header, #header a {
-     color: #4183c4;
-} 
+#slider-container {
+width:100%;
+height:353px;
+display:inline-block;
+margin:-18px auto 0px auto;
+background-image: url(https://www.ballastsecurity.net/wp-content/themes/Ballast-Security/body-container.png);
+}
 
-#header h1 a {
-     text-decoration: none;
-} 
 
-#footer {
-     margin-left: 10px; 
-     margin-right: 10px;
-} 
+#slider {
+display:block;
+width:1004px;
+height:353px;
+margin:0 auto;
+position:relative;
+top:8px;
+overflow:hidden;
+border-bottom:solid #204066 1px;
+}
 
-#footer {
-     margin-top: 3em;
+
+
+#slider li {
+padding:0px;
+list-style-type:none;
+margin:0px;
+border:solid #204066 1px;
+}
+
+#slider li img {
+width:1000px;
+margin:0px;
+border:solid #abc0d1 1px;
+}
+
+
+
+#digi-nav-outer {
+width:1002px;
+height:37px;
+margin:0 auto;
+display:block;
+border: solid #25466b 1px;
+position:relative;
+z-index:99;
+}
+
+#digi-nav {
+width:960px;
+height:35px;
+margin:0 auto;
+display:block;
+padding:0 20px;
+background-color:#204066;
+background: -webkit-linear-gradient(top, #2f5a8a, #204066); 
+background: -moz-linear-gradient(top, #2f5a8a, #204066); 
+background: -ms-linear-gradient(top, #2f5a8a, #204066); 
+background: -o-linear-gradient(top, #2f5a8a, #204066); 
+background: linear-gradient(top, #2f5a8a, #204066); 
+border:solid #c5d5e2 1px;
+border:solid #abc0d1 1px;
+position:relative;
+z-index:999;
+}
+
+#digi-nav ul {
+padding:0px;
+margin:0px;
+border-left:solid #244974 1px;
+}
+
+#digi-nav ul li {
+list-style-type:none;
+display:inline-block;
+position:relative;
+float:left;
+}
+
+#digi-nav ul li a {
+display:block;
+color:#c5d5e2;
+text-decoration:none;
+line-height:35px;
+font-size:18px;
+padding:0 15px;
+border-right:solid #25558d 1px;
+}
+
+#digi-nav ul li a:hover , #digi-nav ul li:hover{
+color:#fff;
+background-color:#2f5a8a;
+text-decoration:none;
+}
+
+#digi-nav ul li ul {
+position:absolute;
+z-index:999;
+display:none;
+width:220px;
+
+}
+
+#digi-nav ul li:hover ul {
+position:absolute;
+display:table;
+background-color:#204066;
+background: -webkit-linear-gradient(top, #2f5a8a, #204066); 
+background: -moz-linear-gradient(top, #2f5a8a, #204066); 
+background: -ms-linear-gradient(top, #2f5a8a, #204066); 
+background: -o-linear-gradient(top, #2f5a8a, #204066); 
+background: linear-gradient(top, #2f5a8a, #204066); 
+border-left:solid #abc0d1 1px;
+border-right:solid #abc0d1 1px;
+border-bottom:solid #abc0d1 1px;
+
+-webkit-box-shadow:0px 1px 1px #25466b,0px 1px 1px #25466b,0px 1px 1px #25466b,0px 1px 1px #25466b;
+-moz-box-shadow:0px 1px 1px #25466b,0px 1px 1px #25466b,0px 1px 1px #25466b,0px 1px 1px #25466b;
+-o-box-shadow:0px 1px 1px #25466b,0px 1px 1px #25466b,0px 1px 1px #25466b,0px 1px 1px #25466b;
+-ms-box-shadow:0px 1px 1px #25466b,0px 1px 1px #25466b,0px 1px 1px #25466b,0px 1px 1px #25466b;
+box-shadow:0px 1px 1px #25466b,0px 1px 1px #25466b,0px 1px 1px #25466b,0px 1px 1px #25466b;
+}
+
+#digi-nav ul li:hover ul li{
+display:block;
+float:none;
+clear:both;
+}
+
+#digi-nav ul li:hover ul li a{
+font-size:13px;
+margin:2px;
+}
+
+#digi-nav ul li:hover ul li a:hover{
+outline: solid #25466b 1px;
+
+}
+
+#digi-nav .current_page_item a {
+color:#fff;
+background-color:#2f5a8a;
+}
+
+#container {
+display:table;
+margin:0 auto 25px auto;
+/*
+background-color:#f2f2f2;
+border:solid #ddd 1px;
+*/
 }
 
 #content {
-    width:100%; 
-    margin:0 auto;
-} 
+margin:0 auto;
+width:1000px;
 
-.post {
-    width:75%; 
-    margin:20px; 
-    margin:5px 5px 20px 5px; 
-    border: dotted #000 1px; 
-    padding:0px;
-} 
-
-.post h2 {
-    margin-top:0px;
+/*
+width:960px;
+padding:0 20px;
+border:solid #fff 1px;
+border-top:none;
+*/
 }
-
-.post h2 a {
-     display:block; 
-     background-color: #f3f3f3; 
-     padding:10px; 
-     margin:0 0 10px 0;  
-     color: #4183c4; 
-     text-decoration: none;
-} 
 
 #sidebar {
-    padding:0px;
-    float:right;
-    width:24%;
-    border: dotted #000 1px;
-    display:table;
+position:relative;
+width:320px;
+padding:20px;
+float:right;
+background-color:#f2f2f2;
+border:solid #ddd 1px;
 }
 
-.entry .date {
-     margin-top: 3px;
-} 
+.entry {
+text-align:justify;
+}
 
-.entry p {
-     margin: 0; 
-     margin-bottom: 1em;
-} 
+.blog {
+width:560px;
+margin:0 0 25px 0;
+padding:0 20px 20px 20px;
+background-color:#f2f2f2;
+border:solid #ddd 1px;
+}
 
-.entry .body {
-     margin-top: 1em; 
-     line-height: 16pt;
+.blog .entry {
+position:relative;
+display:table;
+width:100%;
+}
+
+.blog .entry iframe, .blog .entry img, .blog .entry embed, .blog .entry object {
+max-width:560px;
+}
+
+.single h2 {
+font-size:14px;
+font-weight:normal;
+}
+
+.clear {
+clear:both;
+}
+
+.left,.alignleft {
+float:left;
+}
+
+.right,.alighright {
+float:right;
+}
+
+.center {
+text-align:center;
+display:table;
+margin:0 auto;
+}
+
+#copyright {
+text-align:center;
+font-size:12px;
+padding:10px 0px
+}
+
+#footer {
+border-top:solid #64a4e5 1px;
+background-color:#204066;
+background-image:url(https://www.ballastsecurity.net/wp-content/themes/Ballast-Security/body-container2.png);
+background-position:center top;
+color:#fff;
+}
+
+#footer-container {
+width:1000px;
+margin:0 auto;
+}
+
+#footer a {
+color:#64a4e5;
+}
+
+
+.navigation {
+width:920px;
+display:block;
+}
+
+.pagination {
+clear:both;
+padding:20px 0;
+position:relative;
+font-size:11px;
+line-height:13px;
+}
+
+.pagination span, .pagination a {
+display:block;
+float:left;
+margin: 2px 2px 2px 0;
+padding:6px 9px 5px 9px;
+text-decoration:none;
+width:auto;
+color:#fff;
+background: #555;
+}
+
+.pagination a:hover{
+color:#fff;
+background: #3279BB;
+}
+
+.pagination .current{
+padding:6px 9px 5px 9px;
+background: #3279BB;
+color:#fff;
+}
+
+
+.half {
+display:inline-block;
+vertical-align:top;
+width:48%;
+float:left;
+margin-right:2.2%;
+font-size:14px;
+}
+
+.half_last {
+display:inline-block;
+vertical-align:top;
+width:48%;
+float:right;
+font-size:14px;
+}
+
+
+.third {
+vertical-align:top;
+display:inline-block;
+width:32%;
+margin-right:1.95%;
+font-size:13px;
+float:left;
+}
+
+.third_last {
+vertical-align:top;
+display:inline-block;
+float:right;
+width:32%;
+font-size:13px;
+}
+
+.half h2, .half h3, .half h4, .half_last h2, .half_last  h3, .half_last  h4   {
+font-size:15px;
+font-weight:normal;
+padding:5px;
+color:#fff;
+background-color:#204066;
+background: -webkit-linear-gradient(top, #2f5a8a, #204066); 
+background: -moz-linear-gradient(top, #2f5a8a, #204066); 
+background: -ms-linear-gradient(top, #2f5a8a, #204066); 
+background: -o-linear-gradient(top, #2f5a8a, #204066); 
+background: linear-gradient(top, #2f5a8a, #204066); 
+border:solid #76a5d9 1px;
+outline:solid #2f5a8a 1px;
+}
+
+.third h2, .third h3, .third h4, .third_last h2, .third_last  h3, .third_last  h4 {
+font-size:14px;
+font-weight:normal;
+padding:5px;
+color:#fff;
+background-color:#204066;
+background: -webkit-linear-gradient(top, #2f5a8a, #204066); 
+background: -moz-linear-gradient(top, #2f5a8a, #204066); 
+background: -ms-linear-gradient(top, #2f5a8a, #204066); 
+background: -o-linear-gradient(top, #2f5a8a, #204066); 
+background: linear-gradient(top, #2f5a8a, #204066); 
+border:solid #76a5d9 1px;
+outline:solid #2f5a8a 1px;
+}
+
+.block h2, .block h3, .block h4 {
+font-size:18px;
+}
+
+.block {
+border-top:solid #333 1px;
+border-bottom:solid #333 1px;
+display:block;
+margin:25px auto;
+font-size:20px;
+line-height:1.4em;
+width:90%;
+padding:5px 5%;
+color:#204066;
+}
+
+.featured-image {
+width:560px;
+height:200px;
+margin:0 auto;
+overflow:hidden;
+display:block;
+-moz-box-shadow:0px 0px 2px #555;
+-webkit-box-shadow:0px 0px 2px #555;
+box-shadow:0px 0px 2px #555;
+}
+
+.featured-image img {
+width:560px;
+-moz-box-shadow:0px 0px 2px #aaa;
+-webkit-box-shadow:0px 0px 2px #aaa;
+box-shadow:0px 0px 2px #aaa;
+}
+
+.digi-meta {
+display:block;
+font-size:12px;
+}
+
+.digi-comments {
+border-top: dashed #204066 1px;
+width:500px;
+margin:30px 0 30px 20px;
+}
+
+.commentmetadata a {
+color:#666;
+}
+
+.commentmetadata a:hover {
+color:#aaa;
+}
+
+.commentlist {
+margin: 25px 0;
+padding:10px;
+border-bottom: dashed #333 2px;
+}
+
+.author {
+outline:solid #333 1px;
+border:solid #555 2px;
+background-color:#2f5a8a;
+background: -webkit-linear-gradient(top, #204066, #2f5a8a); 
+background: -moz-linear-gradient(top, #204066, #2f5a8a); 
+background: -ms-linear-gradient(top, #204066, #2f5a8a); 
+background: -o-linear-gradient(top, #204066, #2f5a8a); 
+background: linear-gradient(top, #204066, #2f5a8a); 
+color:#fff;
+display:block;
+width:540px;
+padding:10px;
+margin:25px 0;
+}
+
+.author h4:first-letter {
+margin:0px;
+font-size:150%;
+}
+
+.author h4 {
+margin:0px;
+text-align: left;
+font-size: 16px;
+}
+
+.author img {
+position:relative;
+top:2px;
+border:solid #fff 2px;
+}
+
+.author td {
+font-family: arial;
+vertical-align:top;
+font-size: 15px;
+text-align:justify;
+line-height:1.3em;
+}
+
+.author td p {
+margin:3px 0;
 }

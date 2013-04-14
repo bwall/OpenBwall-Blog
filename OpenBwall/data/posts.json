@@ -3,10 +3,12 @@
 	"description" : "OpenBwall is Brian Wallace's Blog.  Brian is also known as bwall and @bwallHatesTwits.  This blog has entries about software development, security, and various different ideas of bwall's.",
 	"keywords" : "Brian Wallace, bwall, bwallHatesTwits, OpenBwall, Software Development, Software Engineering, Security",
 	"pages" : {
-		"title" : "Contact",
-		"description" : "Methods to contact bwall",
-		"keywords" : "bwall, Twitter, email",
-		"body" : "You can contact me at @bwallHatesTwits or bwall@openbwall.com"
+		"contact" : {
+			"title" : "Contact",
+			"description" : "Methods to contact bwall",
+			"keywords" : "bwall, Twitter, email",
+			"body" : "You can contact me at @bwallHatesTwits or bwall@openbwall.com"
+		}
 	},
 	"order" : ["Optimizing-Bitcoin-Miner-Idea", "Open-Source-Recruiting", "Interpreting-Cyber-Espionage", "AI-API-Project-Idea", "When-Are-Open-Source-Projects-Done", "About-OpenBwall"],
 	"posts" : {
