@@ -19,6 +19,7 @@ lock = Lock()
 lastupdate = False
 
 cssFile = False
+homePage = False
 pageTemplate = False
 sideTemplate = False
 postTemplate = False
@@ -46,6 +47,37 @@ def GeneratePage(title, content, description, keywords):
     return toReturn
 
 class HomeHandler(tornado.web.RequestHandler):
+    def get(self):
+        global lock, posts, homePage
+
+        lock.acquire()
+        title = posts["title"]
+        content = homePage      
+        description = posts["description"]
+        keywords = posts["keywords"]
+        page = content % {"title" : title, "description" : description, "keywords" : keywords}
+        lock.release()
+
+        self.write()
+
+class BlogHandler(tornado.web.RequestHandler):
+    def get(self):
+        global lock, posts, postTemplate
+
+        lock.acquire()
+        title = posts["title"]
+        content = ""
+        for urlname in posts["order"]:
+            entry = posts["posts"][urlname]
+            content += postTemplate % {"urlname" : urlname, "title" : entry["title"], "date" : entry["date"], "body" : entry["body"]}
+        
+        description = posts["description"]
+        keywords = posts["keywords"]
+        lock.release()
+
+        self.write(GeneratePage(title, content, description, keywords))
+
+class BlogListHandler(tornado.web.RequestHandler):
     def get(self):
         global lock, posts, postTemplate
 
@@ -90,6 +122,8 @@ class RefreshHandler(tornado.web.RequestHandler):
 application = tornado.web.Application([
                                        (r"/", HomeHandler),
                                        (r"/css/(.*)", CSSHandler),
+                                       (r"/blog/?", BlogHandler),
+                                       (r"/blog/([0-9]+)", BlogListHandler),
                                        (r"/entry/(.+)", EntryHandler),
                                        (r"/refresh/(.*)", RefreshHandler),
                                        ])
@@ -101,7 +135,7 @@ def main():
     tornado.ioloop.IOLoop.instance().start()
 
 def updatePosts():
-    global lock, posts, lastupdate, cssFile, pageTemplate, sideTemplate, postTemplate
+    global lock, posts, lastupdate, cssFile, pageTemplate, sideTemplate, postTemplate, homePage
     lock.acquire()
     if lastupdate == False or (time.mktime(time.gmtime()) - time.mktime(lastupdate)) > 300:
         try:
@@ -138,6 +172,13 @@ def updatePosts():
             r1 = conn.getresponse()
             if r1.status == 200:
                 postTemplate = r1.read()
+            conn.close()
+
+            conn = httplib.HTTPSConnection("raw.github.com")
+            conn.request("GET", "/bwall/OpenBwall-Blog/master/OpenBwall/data/homePage.html")
+            r1 = conn.getresponse()
+            if r1.status == 200:
+                homePage = r1.read()
             conn.close()
         except:
             print "Failed to update" 

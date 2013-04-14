@@ -26,6 +26,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="data\css\style.css" />
+    <Content Include="data\homePage.html" />
     <Content Include="data\posts.json" />
     <Content Include="data\pageTemplate.html" />
     <Content Include="data\postTemplate.html" />
