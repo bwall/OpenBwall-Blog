@@ -8,6 +8,12 @@
 			"description" : "Methods to contact bwall",
 			"keywords" : "bwall, Twitter, email",
 			"body" : "You can contact me at @bwallHatesTwits or bwall@openbwall.com"
+		},
+		"research" : {
+			"title" : "Research",
+			"description" : "Research at Ballast Security",
+			"keywords" : "ballast security, research, security",
+			"body" : "<p>Here at Ballast Security, we do a lot of research.  Whether it is defensive or offensive, we will research it.  We often release papers on these topics, and you can find them here.</p><p><a title='Transferable State Attack by Brian Wallace' href='https://firebwall.com/research/TransferableStateAttackonIteratedHashingFunctions.pdf' target='_blank'>Transferable State Attack By Brian Wallace</a></p><p><a title='Proper Password Hashing' href='https://firebwall.com/research/ProperPasswordHashing.pdf' target='_blank'>Proper Password Hashing By bwall and drone</a></p><p><a title='Insecurity of Poorly Designed RFI Payloads Part 2' href='https://firebwall.com/research/InsecurityofPoorlyDesignedRemoteFileInclusionPayloads-Part2.pdf' target='_blank'>Insecurity of Poorly Designed RFI Payloads Part 2</a></p><p><a title='Insecurity of Poorly Designed RFI Payloads Part 1' href='https://firebwall.com/research/InsecurityofPoorlyDesignedRemoteFileInclusionPayloads-P1.pdf' target='_blank'>Insecurity of Poorly Designed RFI Payloads Part 1</a></p>"
 		}
 	},
 	"order" : ["Optimizing-Bitcoin-Miner-Idea", "Open-Source-Recruiting", "Interpreting-Cyber-Espionage", "AI-API-Project-Idea", "When-Are-Open-Source-Projects-Done", "About-OpenBwall"],
